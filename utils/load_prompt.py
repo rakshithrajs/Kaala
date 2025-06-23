@@ -10,7 +10,7 @@ def load_prompt(prompt: str) -> str:
     }
 
     try:
-        with open(system_prompts[prompt]) as f:
+        with open(system_prompts[prompt], "r", encoding="utf-8") as f:
             return f.read()
     except FileNotFoundError:
         raise FileError("File is missing or moved from the location")
