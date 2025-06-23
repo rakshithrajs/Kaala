@@ -1,3 +1,5 @@
+"""just the main file"""
+
 from datetime import datetime
 
 import ollama
