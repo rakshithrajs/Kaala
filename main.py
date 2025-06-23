@@ -1,16 +1,16 @@
+from datetime import datetime
+
 import ollama
 from ollama import GenerateResponse
 
 from utils.load_prompt import load_prompt
 from utils.model_parser import model_select
 
-from datetime import datetime
 
 MODEL_NAME = model_select("LLAMA")
 SYSTEM_PROMPT = load_prompt("plan")
 
-st = ""
-while st != "exit":
+while True:
 
     prompt = SYSTEM_PROMPT.replace("{{Iccha_goals}}", input("Enter prompt: ")).replace(
         "{{current_date}}", str(datetime.now())

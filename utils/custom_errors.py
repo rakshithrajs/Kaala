@@ -1,5 +1,6 @@
-from typing import Self
+"""A custom File error"""
 
+from typing import Self
 
 class FileError(Exception):
     """Exception for error in loading files
