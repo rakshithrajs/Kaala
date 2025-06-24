@@ -149,5 +149,3 @@ Your audience is a user if there is no goal_detected. Your audience is an agent 
             }
 
 ---
-
-Here is the user's prompt: {{user_prompt}}

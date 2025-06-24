@@ -1,0 +1,49 @@
+"""Agent Factory"""
+
+from agent.personas import Niyati, Iccha, Karya, Karma, Normal
+from agent.llm import BaseAgent
+from utils.custom_errors import AgentError
+
+
+class AgentFactory:
+    """A menu select agent with a simple string.
+    options:
+        1. niyati
+        2. iccha
+        3. karya
+        4. karma
+        5. normal
+
+    Raises:
+        ValueError: _description_
+
+    Returns:
+        _type_: _description_
+    """
+
+    agents = {
+        "niyati": Niyati,
+        "iccha": Iccha,
+        "karya": Karya,
+        "karma": Karma,
+        "normal": Normal,
+    }
+
+    @staticmethod
+    def create(name: str = "normal") -> BaseAgent:
+        """Create an agent based on the specified string
+
+        Args:
+            name (str, optional): Type of agent you want. Defaults to "normal".
+
+        Raises:
+            AgentError: No specified agent
+
+        Returns:
+            BaseAgent: Type of agent you want
+        """
+        name = name.lower()
+        if name in AgentFactory.agents:
+            return AgentFactory.agents[name]()
+        else:
+            raise AgentError()

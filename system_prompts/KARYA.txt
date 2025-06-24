@@ -154,8 +154,3 @@ Your output should be **only** the final list of scheduled prompts, nothing else
 Return each plan with precision, realism, and foresight.
 
 ---
-
-The current date and time is: {{current_date}}
-
-Here is the user’s goals from Iccha: 
-{{Iccha_goals}}

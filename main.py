@@ -1,23 +1,18 @@
 """just the main file"""
 
-from datetime import datetime
+from agent.agent_factory import AgentFactory
 
-import ollama
-from ollama import GenerateResponse
+agent = AgentFactory.create()
 
-from utils.load_prompt import load_prompt
-from utils.model_parser import model_select
-
-
-MODEL_NAME = model_select("LLAMA")
-SYSTEM_PROMPT = load_prompt("plan")
-
+# write a sinple chatbot loop
 while True:
-
-    prompt = SYSTEM_PROMPT.replace("{{Iccha_goals}}", input("Enter prompt: ")).replace(
-        "{{current_date}}", str(datetime.now())
-    )
-    if prompt == "exit":
+    user_input = input("You: ")
+    if user_input.lower() in ["exit", "quit"]:
+        print("Exiting the chat. Goodbye!")
         break
-    res: GenerateResponse = ollama.generate(model=MODEL_NAME, prompt=prompt)
-    print(res["response"])
+
+    response = agent.chat_stream(user_input)
+    print(f"{agent.name()}: ", end="", flush=True)
+    for chunk in response:
+        print(f"{str(chunk).strip()}", end=" ", flush=True)
+    print()

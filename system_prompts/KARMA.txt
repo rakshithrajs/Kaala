@@ -34,6 +34,3 @@ Guidelines:
     Do not invent capabilities beyond what’s been defined. Use existing tools only.
 
 You are the system’s hands. Your decisions should be fast, focused, and final.
-
-Here's the task:
-{{tasks}}

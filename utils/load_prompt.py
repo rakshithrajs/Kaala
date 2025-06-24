@@ -23,10 +23,10 @@ def load_prompt(prompt: str) -> str:
         str: The content of the system prompt
     """
     system_prompts = {
-        "goal": r"system_prompts\ICCHA.txt",
-        "plan": r"system_prompts\KARYA.txt",
-        "orchestrate": r"system_prompts\NIYATI.txt",
-        "execute": r"system_prompts\KARMA.txt",
+        "Iccha": r"system_prompts\ICCHA.txt",
+        "Karya": r"system_prompts\KARYA.txt",
+        "Niyati": r"system_prompts\NIYATI.txt",
+        "Karma": r"system_prompts\KARMA.txt",
     }
 
     try:

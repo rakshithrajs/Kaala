@@ -12,7 +12,6 @@ from utils.custom_errors import FileError
 
 MODEL_FILE_PATH = r"config\models.json"
 
-
 def model_select(model_name: str) -> str:
     """A fucntion that selects the right model
 

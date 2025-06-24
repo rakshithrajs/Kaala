@@ -140,6 +140,3 @@ You must return output in the following format:
   If you follow it correctly, you earn $200 per decision.
 
 ---
-
-Here is the user’s prompt:
-{{user_prompt}}
