@@ -3,7 +3,7 @@
 from datetime import datetime
 
 from agent.llm import BaseAgent
-from utils.load_prompt import load_prompt
+from utils.prompt_loaders import load_prompt
 
 
 class Niyati(BaseAgent):

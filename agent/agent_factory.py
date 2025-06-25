@@ -43,10 +43,12 @@ class AgentFactory:
             BaseAgent: Type of agent you want
         """
         name = name.lower()
-        if name in AgentFactory.agents:
+        try:
             return AgentFactory.agents[name]()
-        else:
-            raise AgentError()
+        except KeyError as e:
+            raise AgentError(
+                f"No agent ('{name}'), Available agents: {','.join(AgentFactory.agents.keys())}"
+            ) from e
 
     @staticmethod
     def list_agents() -> list[str]:
