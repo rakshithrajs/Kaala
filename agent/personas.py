@@ -1,5 +1,7 @@
 """Contains all the personas"""
 
+from datetime import datetime
+
 from agent.llm import BaseAgent
 from utils.load_prompt import load_prompt
 
@@ -40,6 +42,9 @@ class Karya(BaseAgent):
 
     def __init__(self):
         super().__init__(system_prompt=load_prompt("Karya"))
+
+    def _prepare_prompt(self, prompt: str) -> str:
+        return f"Today's date and time is {datetime.now()} \n {prompt}"
 
     def name(self):
         return "Karya - The Planner"

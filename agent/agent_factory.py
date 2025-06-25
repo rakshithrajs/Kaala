@@ -47,3 +47,24 @@ class AgentFactory:
             return AgentFactory.agents[name]()
         else:
             raise AgentError()
+
+    @staticmethod
+    def list_agents() -> list[str]:
+        """List all available agents
+
+        Returns:
+            list[str]: List of agent names
+        """
+        return list(AgentFactory.agents.keys())
+
+    @staticmethod
+    def get_agent_info(agent: BaseAgent) -> dict:
+        """Get information about the specified agent
+
+        Args:
+            name (str, optional): Type of agent you want. Defaults to "normal".
+
+        Returns:
+            dict: Information about the agent
+        """
+        return agent.info()
