@@ -19,7 +19,7 @@ async def main():
         if user_input.lower() == "exit":
             print("Goodbye!")
             break
-        think = asyncio.create_task(thinking_animation())
+        think = asyncio.create_task(thinking_animation("I am sorry, i am lil slow, i need to think..."))
         response = await agent.generate_async(user_input)
         think.cancel()
         print(f"{agent.name()}: {response['response']}")
