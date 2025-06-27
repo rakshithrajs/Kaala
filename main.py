@@ -3,7 +3,6 @@
 import asyncio
 
 from agent.agent_factory import AgentFactory
-from utils.async_loaders import thinking_animation
 
 agent = AgentFactory.create()
 
@@ -19,10 +18,8 @@ async def main():
         if user_input.lower() == "exit":
             print("Goodbye!")
             break
-        think = asyncio.create_task(thinking_animation("I am sorry, i am lil slow..."))
-        response = await agent.generate_async(user_input)
-        think.cancel()
-        print(f"{agent.name()}: {response['response']}")
+        response = agent.chat(user_input, tools=True)
+        print(f"{agent.name()}: {response['message']['content']}")
 
 
 if __name__ == "__main__":

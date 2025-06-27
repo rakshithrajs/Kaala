@@ -30,7 +30,7 @@ class AgentFactory:
     }
 
     @staticmethod
-    def create(name: str = "normal") -> BaseAgent:
+    def create(name: str = "normal", model:str = "LLAMA") -> BaseAgent:
         """Create an agent based on the specified string
 
         Args:
@@ -44,7 +44,7 @@ class AgentFactory:
         """
         name = name.lower()
         try:
-            return AgentFactory.agents[name]()
+            return AgentFactory.agents[name](model)
         except KeyError as e:
             raise AgentError(
                 f"No agent ('{name}'), Available agents: {','.join(AgentFactory.agents.keys())}"

@@ -2,8 +2,10 @@
 
 from abc import ABC, abstractmethod
 from typing import Generator, Iterator
+
 from ollama import AsyncClient
 import ollama
+
 from utils.model_parser import model_select
 
 
@@ -39,7 +41,6 @@ class BaseAgent(ABC):
         Returns:
             ollama.ChatResponse: Response of the llm to the user
         """
-        # prompt = f"Today's date and time is {datetime.now()}" + prompt
         message = []
         prompt = self._prepare_prompt(prompt)
         self.history.append({"role": "user", "content": prompt})
@@ -145,7 +146,7 @@ class BaseAgent(ABC):
             yield chunch["response"]
 
     async def chat_async(self, prompt: str, **overides: dict) -> ollama.ChatResponse:
-        """A function to maintain history and chat with previous message context in an asynchronous 
+        """A function to maintain history and chat with previous message context in an asynchronous
         manner
 
         Args:
