@@ -1,4 +1,4 @@
 {
-    "DEEPSEEK": "deepseek-r1:1.5b",
-    "LLAMA": "llama3.2:latest"
+    "GEMINI-1.5-PRO": "gemini-1.5-pro",
+    "GEMMA":"gemma-3-27b-it"
 }

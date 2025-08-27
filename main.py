@@ -3,9 +3,9 @@
 import asyncio
 
 from agent.agent_factory import AgentFactory
+from utils.async_loaders import thinking_animation
 
 agent = AgentFactory.create()
-
 
 # write a sinple chatbot loop
 async def main():
@@ -18,8 +18,10 @@ async def main():
         if user_input.lower() == "exit":
             print("Goodbye!")
             break
-        response = agent.chat(user_input, tools=True)
-        print(f"{agent.name()}: {response['message']['content']}")
+        thinking_task = asyncio.create_task(thinking_animation("Aaagu ra lucche..."))
+        response = await agent.generate_async(user_input)
+        thinking_task.cancel()
+        print(f"Bot: {response}", end="")
 
 
 if __name__ == "__main__":
