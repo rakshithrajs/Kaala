@@ -1,12 +1,13 @@
 """LLm.py"""
 
 from abc import ABC, abstractmethod
-from typing import Generator
+from typing import Generator, Type
 import asyncio
 
 from google import genai
 from google.genai import types
 from dotenv import load_dotenv
+from pydantic import BaseModel
 
 from utils.model_parser import model_select
 
@@ -20,8 +21,13 @@ class BaseAgent(ABC):
         self,
         system_prompt: str | None,
         model: str = "GEMINI-1.5-PRO",
+        response_template: Type[BaseModel] | None = None,
     ):
-        self.config = types.GenerateContentConfig(system_instruction=system_prompt)
+        self.config = types.GenerateContentConfig(
+            system_instruction=system_prompt,
+            response_mime_type="application/json",
+            response_schema=list[response_template],
+        )
         self.model = model_select(model)
         self.history = []
         self.client = genai.Client()

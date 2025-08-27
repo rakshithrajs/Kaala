@@ -4,6 +4,13 @@ from datetime import datetime
 
 from agent.llm import BaseAgent
 from utils.prompt_loaders import load_prompt
+from utils.response_templates import (
+    IcchaResponse,
+    KarmaResponse,
+    KaryaResponse,
+    NiyatiResponse,
+    NormalResponse,
+)
 
 
 class Niyati(BaseAgent):
@@ -14,7 +21,11 @@ class Niyati(BaseAgent):
     """
 
     def __init__(self, model: str):
-        super().__init__(system_prompt=load_prompt("Niyati"), model=model)
+        super().__init__(
+            system_prompt=load_prompt("Niyati"),
+            model=model,
+            response_template=NiyatiResponse,
+        )
 
     def name(self):
         return "Niyati - The Orchestrator"
@@ -28,7 +39,11 @@ class Iccha(BaseAgent):
     """
 
     def __init__(self, model: str):
-        super().__init__(system_prompt=load_prompt("Iccha"), model=model)
+        super().__init__(
+            system_prompt=load_prompt("Iccha"),
+            model=model,
+            response_template=IcchaResponse,
+        )
 
     def name(self):
         return "Iccha - The Goal Extractor"
@@ -41,7 +56,11 @@ class Karya(BaseAgent):
     """
 
     def __init__(self, model: str):
-        super().__init__(system_prompt=load_prompt("Karya"), model=model)
+        super().__init__(
+            system_prompt=load_prompt("Karya"),
+            model=model,
+            response_template=KaryaResponse,
+        )
 
     def _prepare_prompt(self, prompt: str) -> str:
         return f"Today's date and time is {datetime.now()} \n {prompt}"
@@ -58,7 +77,11 @@ class Karma(BaseAgent):
     """
 
     def __init__(self, model: str):
-        super().__init__(system_prompt=load_prompt("Karma"), model=model)
+        super().__init__(
+            system_prompt=load_prompt("Karma"),
+            model=model,
+            response_template=KarmaResponse,
+        )
 
     def name(self):
         return "Karma - The Executor"
@@ -72,7 +95,12 @@ class Normal(BaseAgent):
     """
 
     def __init__(self, model: str):
-        super().__init__(system_prompt=None, model=model)
+        super().__init__(
+            system_prompt="""Give the response in the following JSON format itself
+            {"response" : <your response>, "signature" : "Normal"}""",
+            model=model,
+            response_template=NormalResponse,
+        )
 
     def name(self):
         return "Normal"

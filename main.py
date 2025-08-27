@@ -5,7 +5,7 @@ import asyncio
 from agent.agent_factory import AgentFactory
 from utils.async_loaders import thinking_animation
 
-agent = AgentFactory.create()
+agent = AgentFactory.create("Karya")
 
 # write a sinple chatbot loop
 async def main():
@@ -21,7 +21,7 @@ async def main():
         thinking_task = asyncio.create_task(thinking_animation("Aaagu ra lucche..."))
         response = await agent.generate_async(user_input)
         thinking_task.cancel()
-        print(f"Bot: {response}", end="")
+        print(f"Bot: {response}", end="\n")
 
 
 if __name__ == "__main__":
