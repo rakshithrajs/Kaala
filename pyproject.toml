@@ -31,3 +31,6 @@ dependencies = [
     "typing-inspection==0.4.1",
     "tzdata==2025.2",
 ]
+
+[tool.pylint]
+ignore = [".venv", "build", "data", "__pycache__"]
