@@ -1,18 +1,13 @@
-"""Asynchronous loaders for various tasks."""
+"""Asynchronous loaders and UI helpers."""
 
 import asyncio
-import time
 
 
-async def thinking_animation(text:str = "Thinking..."):
-    """A simple asynchronous function to simulate thinking animation"""
+async def thinking_animation(text: str = "Thinking..."):
+    """Simple async spinner/text animation for CLI usage."""
     while True:
-        for i in text:
-            print(i, end=" \b", flush=True)
-            time.sleep(0.05)
-        print("", end="\r")
-        await asyncio.sleep(0.2)
-        for _ in range(len(text)):
-            print("", end="\b", flush=True)
-            time.sleep(0.01)
-        await asyncio.sleep(0.2)
+        for char in text:
+            print(char, end="\b", flush=True)
+            await asyncio.sleep(0.03)
+        print("", end="\r", flush=True)
+        await asyncio.sleep(0.1)

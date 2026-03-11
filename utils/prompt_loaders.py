@@ -1,36 +1,24 @@
-"""Loads System Prompts
+"""Utilities for loading system prompts."""
 
-Raises:
-    FileError: File either does not exist or is moved from location
-
-Returns:
-    str: System Prompt
-"""
+from pathlib import Path
 
 from utils.custom_errors import FileError
 
+_PROMPTS_DIR = Path(__file__).resolve().parent.parent / "system_prompts"
+
 
 def load_prompt(prompt: str) -> str:
-    """Loads System Prompts from the text files
-
-    Args:
-        prompt (str): Prompt name that you wanna load
-
-    Raises:
-        FileError: File not found or location is changed
-
-    Returns:
-        str: The content of the system prompt
-    """
     system_prompts = {
-        "Iccha": r"system_prompts\ICCHA.txt",
-        "Karya": r"system_prompts\KARYA.txt",
-        "Niyati": r"system_prompts\NIYATI.txt",
-        "Karma": r"system_prompts\KARMA.txt",
+        "Iccha": _PROMPTS_DIR / "ICCHA.txt",
+        "Karya": _PROMPTS_DIR / "KARYA.txt",
+        "Niyati": _PROMPTS_DIR / "NIYATI.txt",
+        "Karma": _PROMPTS_DIR / "KARMA.txt",
     }
 
     try:
-        with open(system_prompts[prompt], "r", encoding="utf-8") as f:
-            return f.read()
+        with open(system_prompts[prompt], "r", encoding="utf-8") as file:
+            return file.read()
     except FileNotFoundError as exc:
-        raise FileError("File is missing or moved from the location") from exc
+        raise FileError("Prompt file is missing or moved from the location") from exc
+    except KeyError as exc:
+        raise FileError(f"Unknown prompt '{prompt}' requested") from exc
