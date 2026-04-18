@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python -c \"from core.orchestrator import Orchestrator; from core.scheduler import PromptScheduler; from config.config import get_settings; print\\('All imports OK'\\)\")",
+      "Bash(python -c \"from utils.response_templates import KarmaResponse; k = KarmaResponse\\(action='test', tool='reminder'\\); print\\(k.model_dump\\(\\)\\)\")",
+      "Bash(python -c \"from config.config import get_settings; s = get_settings\\(\\); print\\(f'model={s.default_model}, poll={s.poll_interval}, db={s.database_path}'\\)\")",
+      "Bash(python -c \"from storage.repositories import UserContextRepository; print\\('Import OK'\\)\")",
+      "Bash(python -c ' *)",
+      "Bash(uv add *)",
+      "Bash(uv run *)",
+      "Bash(uv sync *)",
+      "mcp__codegraph__codegraph_files",
+      "mcp__codegraph__codegraph_explore"
+    ]
+  }
+}

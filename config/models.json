@@ -1,4 +1,5 @@
 {
-    "GEMINI-1.5-PRO": "gemini-1.5-pro",
-    "GEMMA":"gemma-3-27b-it"
+    "GEMINI-2-FLASH-LITE": "gemini-2.5-flash-lite",
+    "GEMINI-2-FLASH": "gemini-2.5-flash",
+    "GEMMA": "gemini-flash-latest"
 }

@@ -30,7 +30,7 @@ class AgentFactory:
     }
 
     @staticmethod
-    def create(name: str = "normal", model:str = "GEMINI-1.5-PRO") -> BaseAgent:
+    def create(name: str = "normal", model: str = "GEMINI-2-FLASH-LITE") -> BaseAgent:
         """Create an agent based on the specified string
 
         Args:

@@ -62,7 +62,8 @@ class Karya(BaseAgent):
             response_template=KaryaResponse,
         )
 
-    def _prepare_prompt(self, prompt: str) -> str:
+    def _prepare_prompt(self, prompt: str, context: list[dict] | None = None) -> str:
+        prompt = super()._prepare_prompt(prompt, context=context)
         return f"Today's date and time is {datetime.now()} \n {prompt}"
 
     def name(self):

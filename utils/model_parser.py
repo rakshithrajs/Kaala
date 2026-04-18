@@ -4,29 +4,31 @@ Raises:
     FileError: File not found
 
 Returns:
-    str: model name for ollama to understand
+    str: model name for the LLM provider
 """
 
 import json
+from pathlib import Path
+
 from utils.custom_errors import FileError
 
-MODEL_FILE_PATH = r"config\models.json"
+_MODEL_FILE_PATH = Path(__file__).resolve().parent.parent / "config" / "models.json"
+
 
 def model_select(model_name: str) -> str:
-    """A fucntion that selects the right model
+    """Select the model identifier for a given friendly name.
 
     Args:
-        model_name (str): Name of the model to be returned
+        model_name (str): Friendly model name (e.g. "GEMINI-2-FLASH-LITE")
 
     Raises:
-        FileError: File does not exist or moved from location
+        FileError: Model config file does not exist
 
     Returns:
-        str: The correct name of the model for ollama to understand
+        str: The provider-specific model identifier
     """
     try:
-        with open(MODEL_FILE_PATH, "r", encoding="utf-8") as f:
-            models: dict = json.loads(f.read())
+        models: dict = json.loads(_MODEL_FILE_PATH.read_text(encoding="utf-8"))
     except FileNotFoundError as exc:
         raise FileError(
             "Model json file either does not exist or has been moved"

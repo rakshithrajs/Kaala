@@ -20,7 +20,7 @@ class BaseAgent(ABC):
     def __init__(
         self,
         system_prompt: str | None,
-        model: str = "GEMINI-1.5-PRO",
+        model: str = "GEMINI-2-FLASH-LITE",
         response_template: Type[BaseModel] | None = None,
     ):
         self.config = types.GenerateContentConfig(
@@ -32,27 +32,34 @@ class BaseAgent(ABC):
         self.history = []
         self.client = genai.Client()
 
-    def _prepare_prompt(self, prompt: str) -> str:
-        """Prepare the prompt by adding system prompt if exists
+    def _prepare_prompt(self, prompt: str, context: list[dict] | None = None) -> str:
+        """Prepare the prompt, optionally prepending conversation history.
 
         Args:
-            pormpt (str): User's prompt
+            prompt: User's prompt.
+            context: Optional list of {role, content} dicts from conversation history.
 
         Returns:
-            str: Prepared prompt
+            str: Prepared prompt.
         """
+        if context:
+            history_lines = "\n".join(
+                f"{m['role']}: {m['content']}" for m in context
+            )
+            prompt = f"Previous conversation:\n{history_lines}\n\nCurrent input: {prompt}"
         return prompt
 
-    def chat(self, prompt: str, **overides) -> str | None:
+    def chat(self, prompt: str, context: list[dict] | None = None, **overides) -> str | None:
         """A function to maintain history and chat with prev msg context
 
         Args:
             prompt (str): User's prompt
+            context (list[dict] | None): Optional conversation history
 
         Returns:
-            ollama.ChatResponse: Response of the llm to the user
+            str: Response of the llm to the user
         """
-        prompt = self._prepare_prompt(prompt)
+        prompt = self._prepare_prompt(prompt, context=context)
 
         params = {
             "model": self.model,
@@ -135,17 +142,18 @@ class BaseAgent(ABC):
         for chunk in response:
             yield chunk.text
 
-    async def chat_async(self, prompt: str, **overides: dict) -> str | None:
+    async def chat_async(self, prompt: str, context: list[dict] | None = None, **overides: dict) -> str | None:
         """A function to maintain history and chat with previous message context in an asynchronous
         manner
 
         Args:
             prompt (str): User's prompt
+            context (list[dict] | None): Optional conversation history
 
         Returns:
-            ollama.ChatResponse: Response of the llm to the user
+            str: Response of the llm to the user
         """
-        prompt = self._prepare_prompt(prompt)
+        prompt = self._prepare_prompt(prompt, context=context)
 
         params = {
             "model": self.model,

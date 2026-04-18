@@ -31,6 +31,8 @@ class IcchaResponse(BaseModel):
     goal_detected: bool
     goal: Optional[str] = None
     details: Optional[str] = None
+    urgency: str = "later"
+    needs_clarification: bool = False
     response: Optional[str] = None
     signature: str = "Iccha"
 
@@ -45,6 +47,7 @@ class KaryaResponse(BaseModel):
     goal: str
     prompt: str
     timestamp: datetime
+    prompt_type: str = "check_in"
     signature: str = "Karya"
 
     @field_validator("timestamp", mode="before")
@@ -83,7 +86,7 @@ class KarmaResponse(BaseModel):
         BaseModel: Pydantic BaseModel
     """
 
-    task: str
-    status: Literal["Completed", "Failed", "In Progress"]
-    result: Optional[str] = None
+    action: str
+    tool: str
+    parameters: dict = {}
     signature: str = "Karma"

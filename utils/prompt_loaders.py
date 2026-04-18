@@ -7,7 +7,18 @@ Returns:
     str: System Prompt
 """
 
+from pathlib import Path
+
 from utils.custom_errors import FileError
+
+_SYSTEM_PROMPTS_DIR = Path(__file__).resolve().parent.parent / "system_prompts"
+
+_SYSTEM_PROMPTS = {
+    "Iccha": _SYSTEM_PROMPTS_DIR / "ICCHA.txt",
+    "Karya": _SYSTEM_PROMPTS_DIR / "KARYA.txt",
+    "Niyati": _SYSTEM_PROMPTS_DIR / "NIYATI.txt",
+    "Karma": _SYSTEM_PROMPTS_DIR / "KARMA.txt",
+}
 
 
 def load_prompt(prompt: str) -> str:
@@ -22,15 +33,11 @@ def load_prompt(prompt: str) -> str:
     Returns:
         str: The content of the system prompt
     """
-    system_prompts = {
-        "Iccha": r"system_prompts\ICCHA.txt",
-        "Karya": r"system_prompts\KARYA.txt",
-        "Niyati": r"system_prompts\NIYATI.txt",
-        "Karma": r"system_prompts\KARMA.txt",
-    }
+    path = _SYSTEM_PROMPTS.get(prompt)
+    if path is None:
+        raise FileError(f"Unknown prompt: {prompt}")
 
     try:
-        with open(system_prompts[prompt], "r", encoding="utf-8") as f:
-            return f.read()
+        return path.read_text(encoding="utf-8")
     except FileNotFoundError as exc:
         raise FileError("File is missing or moved from the location") from exc

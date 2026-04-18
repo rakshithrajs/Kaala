@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kaala</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <nav id="sidebar">
+        <div class="logo">Kaala</div>
+        <a href="#" data-panel="chat" class="nav-link active">Chat</a>
+        <a href="#" data-panel="goals" class="nav-link">Goals</a>
+        <a href="#" data-panel="schedules" class="nav-link">Prompts</a>
+        <a href="#" data-panel="history" class="nav-link">History</a>
+    </nav>
+    <main id="content">
+        <!-- Chat Panel -->
+        <section id="panel-chat" class="panel active">
+            <div id="chat-messages"></div>
+            <div id="chat-input-area">
+                <input type="text" id="chat-input" placeholder="Type a message..." autocomplete="off">
+                <button id="chat-send">Send</button>
+            </div>
+        </section>
+
+        <!-- Goals Panel -->
+        <section id="panel-goals" class="panel">
+            <div class="panel-header">
+                <h2>Goals</h2>
+                <div class="tab-bar" id="goals-tabs">
+                    <button class="tab active" data-status="">All</button>
+                    <button class="tab" data-status="pending">Pending</button>
+                    <button class="tab" data-status="in_progress">In Progress</button>
+                    <button class="tab" data-status="completed">Completed</button>
+                    <button class="tab" data-status="cancelled">Cancelled</button>
+                </div>
+            </div>
+            <div id="goals-list" class="card-list"></div>
+        </section>
+
+        <!-- Schedules Panel -->
+        <section id="panel-schedules" class="panel">
+            <div class="panel-header">
+                <h2>Scheduled Prompts</h2>
+                <div class="tab-bar" id="schedules-tabs">
+                    <button class="tab active" data-status="pending">Pending</button>
+                    <button class="tab" data-status="executed">Executed</button>
+                    <button class="tab" data-status="failed">Failed</button>
+                    <button class="tab" data-status="cancelled">Cancelled</button>
+                </div>
+            </div>
+            <div id="schedules-list" class="card-list"></div>
+        </section>
+
+        <!-- History Panel -->
+        <section id="panel-history" class="panel">
+            <div class="panel-header">
+                <h2>Conversation History</h2>
+                <div class="filters">
+                    <select id="history-agent">
+                        <option value="">All agents</option>
+                        <option value="User">User</option>
+                        <option value="Niyati">Niyati</option>
+                        <option value="Iccha">Iccha</option>
+                        <option value="Karya">Karya</option>
+                        <option value="Karma">Karma</option>
+                    </select>
+                    <select id="history-limit">
+                        <option value="20">Last 20</option>
+                        <option value="50" selected>Last 50</option>
+                        <option value="100">Last 100</option>
+                    </select>
+                    <button id="history-refresh" class="btn-secondary">Refresh</button>
+                </div>
+            </div>
+            <div id="history-list" class="history-entries"></div>
+        </section>
+    </main>
+
+    <!-- Toast container for WebSocket notifications -->
+    <div id="toast-container"></div>
+
+    <script src="/js/app.js"></script>
+    <script src="/js/chat.js"></script>
+    <script src="/js/goals.js"></script>
+    <script src="/js/schedules.js"></script>
+    <script src="/js/history.js"></script>
+</body>
+</html>
