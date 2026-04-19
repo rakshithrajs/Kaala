@@ -1,5 +1,5 @@
 [project]
-name = "kinda-jarvis"
+name = "kaala"
 version = "0.1.0"
 description = "The Proactive AI Agent"
 readme = "README.md"
@@ -10,7 +10,7 @@ dependencies = [
     "apscheduler>=3.11.0",
     "certifi==2025.6.15",
     "dotenv>=0.9.9",
-    "google-genai>=1.31.0",
+    "ollama>=0.5.1",
     "h11==0.16.0",
     "httpcore==1.0.9",
     "httpx==0.28.1",
@@ -32,17 +32,22 @@ dependencies = [
     "websockets>=14.0",
 ]
 
-[tool.pylint]
-ignore = [".venv", "build", "data", "__pycache__"]
-
-[dependency-groups]
-dev = [
-    "pytest>=9.0.3",
-    "pytest-asyncio>=1.3.0",
-]
+[project.scripts]
+kaala = "kaala.cli:cli_main"
+kaala-web = "kaala.cli:web_main"
 
 [project.optional-dependencies]
 dev = [
     "pytest>=8.0.0",
     "pytest-asyncio>=0.24.0",
 ]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+"config" = ["models.json"]
+"prompts" = ["*.txt"]
+
+[tool.pylint]
+ignore = [".venv", "build", "data", "__pycache__", ".pytest_cache"]

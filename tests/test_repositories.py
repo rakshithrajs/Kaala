@@ -6,14 +6,14 @@ import pytest_asyncio
 
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncSession
 
-from storage.database import Base
-from storage.repositories import (
+from kaala.storage.database import Base
+from kaala.storage.repositories import (
     GoalRepository,
     ScheduleRepository,
     HistoryRepository,
     UserContextRepository,
 )
-from storage.models import Goal, ScheduledPrompt, ConversationHistory, UserContext
+from kaala.storage.models import Goal, ScheduledPrompt, ConversationHistory, UserContext
 
 
 @pytest_asyncio.fixture
@@ -67,13 +67,13 @@ async def test_goal_repo_update_status(session: AsyncSession):
 
 @pytest.mark.asyncio
 async def test_schedule_repo_create_and_get_due(session: AsyncSession):
-    from datetime import datetime, timedelta
+    from datetime import datetime, timedelta, timezone
 
     schedule_repo = ScheduleRepository(session)
     goal_repo = GoalRepository(session)
 
     goal = await goal_repo.create(goal_text="Test goal")
-    past_time = datetime.utcnow() - timedelta(hours=1)
+    past_time = datetime.now(timezone.utc) - timedelta(hours=1)
     prompt = await schedule_repo.create(
         prompt_text="Check on goal",
         scheduled_for=past_time,
@@ -89,10 +89,10 @@ async def test_schedule_repo_create_and_get_due(session: AsyncSession):
 
 @pytest.mark.asyncio
 async def test_schedule_repo_mark_executed(session: AsyncSession):
-    from datetime import datetime, timedelta
+    from datetime import datetime, timedelta, timezone
 
     repo = ScheduleRepository(session)
-    past_time = datetime.utcnow() - timedelta(minutes=5)
+    past_time = datetime.now(timezone.utc) - timedelta(minutes=5)
     prompt = await repo.create(prompt_text="Test prompt", scheduled_for=past_time)
 
     executed = await repo.mark_executed(prompt.id)

@@ -3,9 +3,9 @@
 import pytest
 import pytest_asyncio
 
-from core.tools import ToolRegistry
-from tools.reminder import ReminderTool
-from tools.message import MessageTool
+from kaala.core.tools import ToolRegistry
+from kaala.tools.reminder import ReminderTool
+from kaala.tools.message import MessageTool
 
 
 def test_tool_registry_register():

@@ -3,7 +3,7 @@
 import pytest
 from unittest.mock import MagicMock
 
-from core.scheduler import PromptScheduler
+from kaala.core.scheduler import PromptScheduler
 
 
 def test_scheduler_init():
