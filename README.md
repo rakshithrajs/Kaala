@@ -1,5 +1,36 @@
-# Kaal – Your Time-Aware, Proactive AI Companion
+# Kaal – Time-Aware Proactive Assistant (CLI)
 
-Kaal is an experimental autonomous AI assistant designed to take initiative, remember long-term goals, and interact with you proactively—like a digital companion that understands the flow of time.
+Kaal is a proactive, multi-persona assistant prototype.
 
-Rather than waiting for commands, Kaal checks in, follows up, and evolves with you.
+## Current Architecture
+
+- **Niyati**: routing/orchestration persona
+- **Iccha**: goal extraction persona
+- **Karya**: planning persona (creates future prompt schedule)
+- **Karma**: execution persona (turns due prompts into actions)
+- **SQLite task store**: persists planned prompts and execution logs
+- **Background scheduler loop**: checks and executes due tasks automatically
+
+## Quick Start
+
+1. Install dependencies:
+
+```bash
+uv sync
+```
+
+2. Create `.env` with your Google GenAI API key (`GOOGLE_API_KEY`).
+
+3. Run:
+
+```bash
+uv run python main.py --model GEMINI-1.5-PRO --poll-interval 15
+```
+
+4. Type goals naturally in the chat. Kaal will schedule follow-ups and execute them when due.
+
+## Notes
+
+- Model aliases are loaded from `config/models.json`.
+- Scheduled tasks and execution history are stored in `data/kaal.db`.
+- The goal classifier module is included and now uses cross-platform file paths.

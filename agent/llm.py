@@ -1,198 +1,98 @@
-"""LLm.py"""
+"""Core LLM agent wrapper utilities."""
 
-from abc import ABC, abstractmethod
-from typing import Generator, Type
+from __future__ import annotations
+
 import asyncio
+import json
+import re
+from abc import ABC, abstractmethod
+from typing import Any, Generator
 
+from dotenv import load_dotenv
 from google import genai
 from google.genai import types
-from dotenv import load_dotenv
-from pydantic import BaseModel
 
 from utils.model_parser import model_select
 
 load_dotenv(".env")
 
+_JSON_BLOCK = re.compile(r"(\{.*\}|\[.*\])", re.DOTALL)
+
 
 class BaseAgent(ABC):
-    """Base Class for all the agents"""
+    """Base class for all personas."""
 
-    def __init__(
-        self,
-        system_prompt: str | None,
-        model: str = "GEMINI-1.5-PRO",
-        response_template: Type[BaseModel] | None = None,
-    ):
+    def __init__(self, system_prompt: str | None, model: str = "GEMINI-1.5-PRO"):
         self.config = types.GenerateContentConfig(
             system_instruction=system_prompt,
             response_mime_type="application/json",
-            response_schema=list[response_template],
         )
         self.model = model_select(model)
-        self.history = []
         self.client = genai.Client()
 
     def _prepare_prompt(self, prompt: str) -> str:
-        """Prepare the prompt by adding system prompt if exists
-
-        Args:
-            pormpt (str): User's prompt
-
-        Returns:
-            str: Prepared prompt
-        """
         return prompt
 
-    def chat(self, prompt: str, **overides) -> str | None:
-        """A function to maintain history and chat with prev msg context
+    @staticmethod
+    def _parse_json_response(text: str | None) -> Any:
+        """Parse potentially noisy LLM output into JSON if possible."""
+        if not text:
+            return None
+        raw = text.strip()
+        try:
+            return json.loads(raw)
+        except json.JSONDecodeError:
+            match = _JSON_BLOCK.search(raw)
+            if not match:
+                return None
+            return json.loads(match.group(1))
 
-        Args:
-            prompt (str): User's prompt
-
-        Returns:
-            ollama.ChatResponse: Response of the llm to the user
-        """
+    def chat(self, prompt: str, **overrides) -> str | None:
         prompt = self._prepare_prompt(prompt)
+        chat = self.client.chats.create(model=self.model, config=self.config, **overrides)
+        return chat.send_message(prompt).text
 
-        params = {
-            "model": self.model,
-            "config": self.config,
-            **overides,
-        }
-
-        chat = self.client.chats.create(**params)
-
-        response = chat.send_message(prompt)
-
-        return response.text
-
-    def generate(self, prompt: str, **overides) -> str | None:
-        """A function to generate immidiate responses
-
-        Args:
-            prompt (str): User's prompt
-
-        Returns:
-            ollama.GenerateResponse: Response of the llm to the user
-        """
+    def generate(self, prompt: str, **overrides) -> str | None:
         prompt = self._prepare_prompt(prompt)
-
-        params = {
-            "model": self.model,
-            "contents": prompt,
-            "config": self.config,
-            **overides,
-        }
-
-        return self.client.models.generate_content(**params).text
-
-    def chat_stream(self, prompt: str, **overides) -> Generator[str | None, None, None]:
-        """A function to maintain history and chat with prev msg context in a streaming manner
-
-        Args:
-            prompt (str): User's prompt
-
-        Yields:
-            Generator[ollama.ChatResponse, None, None]: Streaming response of the llm to the user
-        """
-        prompt = self._prepare_prompt(prompt)
-
-        params = {
-            "model": self.model,
-            "contents": prompt,
-            "config": self.config,
-            **overides,
-        }
-
-        chat = self.client.chats.create(**params)
-
-        response = chat.send_message_stream(prompt)
-
-        for chunk in response:
-            yield chunk.text
-
-    def generate_stream(
-        self, prompt: str, **overides
-    ) -> Generator[str | None, None, None]:
-        """A function to generate immidiate responses in a streaming manner
-
-        Args:
-            prompt (str): User's prompt
-
-        Yields:
-            Generator[str, None, None]: Streaming response of the llm to the user
-        """
-        prompt = self._prepare_prompt(prompt)
-
-        params = {
-            "model": self.model,
-            "contents": prompt,
-            "config": self.config,
-            **overides,
-        }
-
-        response = self.client.models.generate_content_stream(**params)
-        for chunk in response:
-            yield chunk.text
-
-    async def chat_async(self, prompt: str, **overides: dict) -> str | None:
-        """A function to maintain history and chat with previous message context in an asynchronous
-        manner
-
-        Args:
-            prompt (str): User's prompt
-
-        Returns:
-            ollama.ChatResponse: Response of the llm to the user
-        """
-        prompt = self._prepare_prompt(prompt)
-
-        params = {
-            "model": self.model,
-            "config": self.config,
-            **overides,
-        }
-
-        chat = self.client.chats.create(**params)
-        response = await asyncio.to_thread(chat.send_message, prompt)
-
-        return response.text
-
-    async def generate_async(self, prompt: str, **overides: dict) -> str | None:
-        """A function to generate immediate responses in an asynchronous manner
-
-        Args:
-            prompt (str): User's prompt
-
-        Returns:
-            ollama.GenerateResponse: Response of the llm to the user
-        """
-        prompt = self._prepare_prompt(prompt)
-
-        params = {
-            "model": self.model,
-            "contents": prompt,
-            "config": self.config,
-            **overides,
-        }
-
-        response = await asyncio.to_thread(
-            self.client.models.generate_content, **params
+        response = self.client.models.generate_content(
+            model=self.model,
+            contents=prompt,
+            config=self.config,
+            **overrides,
         )
         return response.text
 
+    async def generate_async(self, prompt: str, **overrides) -> str | None:
+        prompt = self._prepare_prompt(prompt)
+        response = await asyncio.to_thread(
+            self.client.models.generate_content,
+            model=self.model,
+            contents=prompt,
+            config=self.config,
+            **overrides,
+        )
+        return response.text
+
+    def generate_json(self, prompt: str, **overrides) -> Any:
+        return self._parse_json_response(self.generate(prompt, **overrides))
+
+    async def generate_async_json(self, prompt: str, **overrides) -> Any:
+        return self._parse_json_response(await self.generate_async(prompt, **overrides))
+
+    def generate_stream(self, prompt: str, **overrides) -> Generator[str | None, None, None]:
+        prompt = self._prepare_prompt(prompt)
+        response = self.client.models.generate_content_stream(
+            model=self.model,
+            contents=prompt,
+            config=self.config,
+            **overrides,
+        )
+        for chunk in response:
+            yield chunk.text
+
     @abstractmethod
     def name(self) -> str:
-        """Name of the persona
+        """Display name of the persona."""
 
-        Returns:
-            str: Name of the persona
-        """
-
-    def info(self):
-        """Returns Agent info
-
-        Returns:
-            dict: details about the agent like name, base model, system prompt
-        """
+    def info(self) -> dict[str, str]:
         return {"name": self.name(), "model": self.model}
