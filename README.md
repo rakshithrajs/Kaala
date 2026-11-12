@@ -1,3 +1,5 @@
+DISCONTINUED
+
 # Kaal – Time-Aware Proactive Assistant (CLI)
 
 Kaal is a proactive, multi-persona assistant prototype.
